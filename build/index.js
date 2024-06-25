@@ -27,10 +27,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const fastify_1 = __importDefault(require("fastify"));
+const mysql_1 = __importDefault(require("@fastify/mysql"));
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 const fastify = (0, fastify_1.default)({ logger: true });
-const PORT = parseInt(process.env.PORT || "3000", 10);
+const PORT = parseInt(process.env.PORT || "8080", 10);
+fastify.register(mysql_1.default, {
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    promise: true,
+});
+// Controllers
+// fastify.register(fooController, { prefix: "/foo" });
 fastify.get("/", async (request, reply) => {
     return JSON.stringify("Hello there! 👋");
 });
