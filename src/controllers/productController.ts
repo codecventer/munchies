@@ -87,6 +87,24 @@ export async function addNewProduct(
   }
 }
 
+export async function deleteProductByName(
+  fastify: any,
+  request: any,
+  reply: any
+): Promise<any> {
+  const productName = request.body.name;
+
+  try {
+    await deleteProduct(fastify, productName).then(() => {
+      reply.status(200).send({ message: "Successfully deleted product" });
+    });
+  } catch (error: any) {
+    reply
+      .status(400)
+      .send({ error: "Failed to delete product", message: error.message });
+  }
+}
+
 async function findProductByName(
   fastify: any,
   productName: string
@@ -115,8 +133,24 @@ async function addProduct(
 ): Promise<void> {
   return await new Promise<void>(async (resolve, reject) => {
     fastify.mysql.query(
-      `INSERT INTO munch_pos.Products (name, description, price, quantity, deleted) VALUES (?, ?, ?, ?, false);`,
+      `INSERT INTO munch_pos.Products (name, description, price, quantity, deleted) VALUES (?, ?, ?, ?, false)`,
       [name, description, price, quantity],
+      (error: any) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      }
+    );
+  });
+}
+
+async function deleteProduct(fastify: any, name: string): Promise<void> {
+  return await new Promise<void>(async (resolve, reject) => {
+    fastify.mysql.query(
+      `UPDATE munch_pos.Products SET deleted = true WHERE name = ?`,
+      [name],
       (error: any) => {
         if (error) {
           reject(error);

@@ -125,7 +125,7 @@ async function addUser(
     const hashedPassword: string = await encryptPassword(password);
 
     fastify.mysql.query(
-      `INSERT INTO munch_pos.Users (emailAddress, password) VALUES (?, ?);`,
+      `INSERT INTO munch_pos.Users (emailAddress, password) VALUES (?, ?)`,
       [emailAddress, hashedPassword],
       (error: any) => {
         if (error) {

@@ -6,6 +6,7 @@ import { authenticateJWT } from "./utils/jwtUtil";
 import { registerUser, loginUser } from "./controllers/userController";
 import {
   addNewProduct,
+  deleteProductByName,
   getAllActiveProducts,
   getAllProducts,
 } from "./controllers/productController";
@@ -58,6 +59,15 @@ fastify.post(
   { preHandler: authenticateJWT },
   async (request, reply) => {
     await addNewProduct(fastify, request, reply);
+  }
+);
+
+//TODO: USE PRODUCT ROUTE OPTION
+fastify.post(
+  "/products/delete-product",
+  { preHandler: authenticateJWT },
+  async (request, reply) => {
+    await deleteProductByName(fastify, request, reply);
   }
 );
 
