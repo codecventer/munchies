@@ -5,17 +5,20 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "start": "node build/index.js"
+    "start": "node build/index.js",
+    "dev": "tsc -p tsconfig.json && node build/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@fastify/mysql": "^4.3.0",
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "fastify": "^4.28.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/node": "^20.14.8",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.2"
