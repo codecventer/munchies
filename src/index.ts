@@ -5,6 +5,7 @@ import { MySQLPool } from "@fastify/mysql";
 import * as dotenv from "dotenv";
 import { encryptPassword, isCorrectPassword } from "./utils/passwordUtil";
 import { generateToken, authenticateJWT } from "./utils/jwtUtil";
+import { isValidateEmail } from "./utils/regexUtil";
 
 dotenv.config();
 
@@ -43,6 +44,13 @@ fastify.register(mysql, {
 fastify.post("/users/register", userRouteOptions, async (request, reply) => {
   const { emailAddress, password }: UserCredentials =
     request.body as UserCredentials;
+
+  if (!isValidateEmail(emailAddress)) {
+    return reply.status(400).send({
+      error: "Invalid email",
+      message: "Email address is not valid",
+    });
+  }
 
   try {
     const existingUser = await findUser(emailAddress);
