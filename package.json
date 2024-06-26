@@ -9,16 +9,18 @@
     "dev": "tsc -p tsconfig.json && node build/index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Christiaan Venter",
   "license": "ISC",
   "dependencies": {
     "@fastify/mysql": "^4.3.0",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
-    "fastify": "^4.28.0"
+    "fastify": "^4.28.0",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.14.8",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.2"
