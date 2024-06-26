@@ -1,10 +1,15 @@
 import Fastify from "fastify";
-import { RouteShorthandOptions } from "fastify";
 import mysql from "@fastify/mysql";
 import { MySQLPool } from "@fastify/mysql";
 import * as dotenv from "dotenv";
 import { authenticateJWT } from "./utils/jwtUtil";
 import { registerUser, loginUser } from "./controllers/userController";
+import {
+  addNewProduct,
+  getAllActiveProducts,
+  getAllProducts,
+} from "./controllers/productController";
+import { userRouteOptions } from "./utils/routeOptionsUtil";
 
 dotenv.config();
 
@@ -17,36 +22,43 @@ declare module "fastify" {
   }
 }
 
-const userRouteOptions: RouteShorthandOptions = {
-  schema: {
-    body: {
-      type: "object",
-      required: ["emailAddress", "password"],
-      properties: {
-        emailAddress: { type: "string" },
-        password: { type: "string" },
-      },
-    },
-  },
-};
-
 fastify.register(mysql, {
   connectionString: process.env.DB_CONNECTION_STRING,
 });
 
+//TODO: SECURE ENDPOINT
 fastify.post("/users/register", userRouteOptions, async (request, reply) => {
   await registerUser(fastify, request, reply);
 });
 
+//TODO: SECURE ENDPOINT
 fastify.post("/users/login", userRouteOptions, async (request, reply) => {
   await loginUser(fastify, request, reply);
 });
 
-//TODO: WIP
 fastify.get(
-  "/test-secure-endpoint",
+  "/products/all-products",
   { preHandler: authenticateJWT },
-  async (request, reply) => {}
+  async (request, reply) => {
+    await getAllProducts(fastify, reply);
+  }
+);
+
+fastify.get(
+  "/products/all-active-products",
+  { preHandler: authenticateJWT },
+  async (request, reply) => {
+    await getAllActiveProducts(fastify, reply);
+  }
+);
+
+//TODO: USE PRODUCT ROUTE OPTION
+fastify.post(
+  "/products/add-product",
+  { preHandler: authenticateJWT },
+  async (request, reply) => {
+    await addNewProduct(fastify, request, reply);
+  }
 );
 
 const start = async () => {

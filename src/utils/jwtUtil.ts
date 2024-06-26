@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import jwt from "jsonwebtoken";
-import { UserCredentials } from "../index";
+import { UserCredentials } from "../controllers/userController";
 
 const JWT_SECRET: string = process.env.JWT_SECRET || "default_secret";
 

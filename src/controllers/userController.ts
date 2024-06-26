@@ -33,12 +33,12 @@ export async function registerUser(
   }
 
   try {
-    const existingUser = await findUser(fastify, emailAddress);
+    const existingUser = await findUserByEmail(fastify, emailAddress);
 
     if (existingUser.length) {
       return reply.status(400).send({
         error: "User already exists",
-        message: "User email address already registered",
+        message: `User email address ${emailAddress} already registered`,
       });
     }
 
@@ -61,7 +61,7 @@ export async function loginUser(
     request.body as UserCredentials;
 
   try {
-    const existingUser = await findUser(fastify, emailAddress);
+    const existingUser = await findUserByEmail(fastify, emailAddress);
 
     if (!existingUser.length) {
       return reply.status(400).send({
@@ -97,7 +97,10 @@ export async function loginUser(
   }
 }
 
-async function findUser(fastify: any, emailAddress: string): Promise<any> {
+async function findUserByEmail(
+  fastify: any,
+  emailAddress: string
+): Promise<any> {
   return await new Promise<any>((resolve, reject) => {
     fastify.mysql.query(
       `SELECT * FROM munch_pos.Users WHERE emailAddress = ?`,
