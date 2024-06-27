@@ -1,3 +1,6 @@
+import { Exception } from "../utils/exceptionUtil";
+import { validateStringNotNullOrBlank } from "../utils/stringUtil";
+
 export interface ProductInformation {
   name: string;
   price: number;
@@ -36,7 +39,7 @@ export async function getAllActiveProducts(
         if (error) {
           reject(error);
           reply.status(400).send({
-            error: "Failed to get all products",
+            error: "Failed to get all active products",
             message: error.message,
           });
         } else {
@@ -72,8 +75,8 @@ export async function addNewProduct(
 
     if (existingProduct.length) {
       return reply.status(400).send({
-        error: "Product already exists",
-        message: `Product with name ${name} already exists`,
+        error: "Failed to add product",
+        message: `Product with name '${name}' already exists`,
       });
     }
 
@@ -92,7 +95,23 @@ export async function deleteProductByName(
   request: any,
   reply: any
 ): Promise<any> {
-  const productName = request.body.name;
+  const productName: string = request.body.name;
+
+  if (!validateStringNotNullOrBlank(productName)) {
+    return reply.status(400).send({
+      error: "Failed to delete product",
+      message: "Product name required",
+    });
+  }
+
+  const existingProduct = await findProductByName(fastify, productName);
+
+  if (!existingProduct.length) {
+    return reply.status(400).send({
+      error: "Failed to delete product",
+      message: `Could not find product with name '${productName}'`,
+    });
+  }
 
   try {
     await deleteProduct(fastify, productName).then(() => {
@@ -102,6 +121,58 @@ export async function deleteProductByName(
     reply
       .status(400)
       .send({ error: "Failed to delete product", message: error.message });
+  }
+}
+
+export async function updateProductByField(
+  fastify: any,
+  request: any,
+  reply: any
+): Promise<any> {
+  const name: string = request.body.name;
+  const index: number = request.body.index;
+  const value: string = request.body.value;
+
+  const existingProduct = await findProductByName(fastify, name);
+
+  if (!existingProduct.length) {
+    return reply.status(400).send({
+      error: "Failed to delete product",
+      message: `Could not find product with name '${name}'`,
+    });
+  }
+
+  if (index < 0 || index > 3) {
+    return reply.status(400).send({
+      error: "Failed to update product",
+      message: `Could not find field for index '${index}'`,
+    });
+  }
+
+  if (!validateIndexValueType(index, value)) {
+    return reply.status(400).send({
+      error: "Failed to update product",
+      message: `Value of '${value}' is incorrect data type for index '${index}'`,
+    });
+  }
+
+  if (index == 0 || index == 1) {
+    if (!validateStringNotNullOrBlank(value)) {
+      return reply.status(400).send({
+        error: "Failed to update product",
+        message: "Update value required",
+      });
+    }
+  }
+
+  try {
+    await updateProduct(fastify, name, index, value).then(() => {
+      reply.status(200).send({ message: "Successfully updated product" });
+    });
+  } catch (error: any) {
+    reply
+      .status(400)
+      .send({ error: "Failed to update product", message: error.message });
   }
 }
 
@@ -162,6 +233,33 @@ async function deleteProduct(fastify: any, name: string): Promise<void> {
   });
 }
 
+async function updateProduct(
+  fastify: any,
+  name: string,
+  index: number,
+  value: string
+): Promise<void> {
+  const field: string | null = getColumnNameByIndex(index);
+
+  if (field == null) {
+    throw new Exception("Field value cannot be null to update product");
+  }
+
+  return await new Promise<void>(async (resolve, reject) => {
+    fastify.mysql.query(
+      `UPDATE munch_pos.Products SET \`${field}\` = ? WHERE name = ?`,
+      [value, name],
+      (error: any) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      }
+    );
+  });
+}
+
 function validateAddProductFields(
   name: string,
   price: number,
@@ -192,4 +290,28 @@ function validateAddProductFields(
   }
 
   return null;
+}
+
+function validateIndexValueType(index: number, value: any): boolean {
+  if (index === 0 || index === 1) {
+    return typeof value === "string";
+  }
+
+  if (index === 2 || index === 3) {
+    return typeof value === "number";
+  }
+
+  return false;
+}
+
+function getColumnNameByIndex(index: number): string | null {
+  return index === 0
+    ? "name"
+    : index === 1
+    ? "description"
+    : index === 2
+    ? "price"
+    : index === 3
+    ? "quantity"
+    : null;
 }

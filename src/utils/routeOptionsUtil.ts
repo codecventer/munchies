@@ -27,3 +27,16 @@ export const productRouteOptions: RouteShorthandOptions = {
     },
   },
 };
+
+export const updateProductRouteOptions: RouteShorthandOptions = {
+  schema: {
+    body: {
+      type: "object",
+      required: ["index", "value"],
+      properties: {
+        index: { type: "string" },
+        value: { type: "string" },
+      },
+    },
+  },
+};

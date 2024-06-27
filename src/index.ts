@@ -9,6 +9,7 @@ import {
   deleteProductByName,
   getAllActiveProducts,
   getAllProducts,
+  updateProductByField as updateProductByField,
 } from "./controllers/productController";
 import { userRouteOptions } from "./utils/routeOptionsUtil";
 
@@ -68,6 +69,15 @@ fastify.post(
   { preHandler: authenticateJWT },
   async (request, reply) => {
     await deleteProductByName(fastify, request, reply);
+  }
+);
+
+//TODO: USE PRODUCT ROUTE OPTION
+fastify.post(
+  "/products/update-product",
+  { preHandler: authenticateJWT },
+  async (request, reply) => {
+    await updateProductByField(fastify, request, reply);
   }
 );
 

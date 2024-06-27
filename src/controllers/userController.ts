@@ -38,7 +38,7 @@ export async function registerUser(
     if (existingUser.length) {
       return reply.status(400).send({
         error: "User already exists",
-        message: `User email address ${emailAddress} already registered`,
+        message: `User email address '${emailAddress}' already registered`,
       });
     }
 
@@ -66,7 +66,7 @@ export async function loginUser(
     if (!existingUser.length) {
       return reply.status(400).send({
         error: "User not found",
-        message: `User with email ${emailAddress} does not exist`,
+        message: `User with email '${emailAddress}' does not exist`,
       });
     }
 
