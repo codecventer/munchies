@@ -228,6 +228,42 @@ export async function getProductUpsellProducts(
   }
 }
 
+export async function unlinkProductUpsellProduct(
+  request: any,
+  reply: any
+): Promise<any> {
+  const productId = request.body.product_id;
+
+  if (typeof productId !== "number" || productId == null) {
+    return reply.status(400).send({
+      error: "Failed to unlink upsell product",
+      message: "Missing field(s) or request parameters are not integers",
+    });
+  }
+
+  const existingProduct = await findProductById(productId);
+
+  if (existingProduct == null) {
+    return reply.status(400).send({
+      error: "Failed to unlink upsell product",
+      message: `Product with ID '${productId}' not found`,
+    });
+  }
+
+  try {
+    await unlinkUpsellProduct(productId).then(() => {
+      reply
+        .status(200)
+        .send({ message: "Successfully unlinked upsell product" });
+    });
+  } catch (error: any) {
+    reply.status(400).send({
+      error: "Failed to unlink upsell product",
+      message: error.message,
+    });
+  }
+}
+
 async function findProductByName(productName: string): Promise<any> {
   try {
     const productByName = await product.findOne({
@@ -358,6 +394,25 @@ async function getUpsellProducts(productId: number): Promise<any> {
     return upsellProducts;
   } catch (error: any) {
     throw new Error(`Error finding upsell products: ${error.message}`);
+  }
+}
+
+async function unlinkUpsellProduct(productId: number): Promise<void> {
+  try {
+    await product.update(
+      {
+        upsellProductId: null,
+      },
+      {
+        where: {
+          id: productId,
+        },
+      }
+    );
+
+    return;
+  } catch (error: any) {
+    throw new Error(`Error unlinking upsell product: ${error.message}`);
   }
 }
 

@@ -9,6 +9,7 @@ import {
   getAllProducts,
   getProductUpsellProducts,
   linkUpsellProductByIds,
+  unlinkProductUpsellProduct,
   updateProductByField as updateProductByField,
 } from "./controllers/productController";
 
@@ -86,6 +87,14 @@ fastify.post(
   { preHandler: authenticateJWT },
   async (request, reply) => {
     await getProductUpsellProducts(request, reply);
+  }
+);
+
+fastify.post(
+  "/products/unlink-upsell-product",
+  { preHandler: authenticateJWT },
+  async (request, reply) => {
+    await unlinkProductUpsellProduct(request, reply);
   }
 );
 
