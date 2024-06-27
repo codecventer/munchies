@@ -1,5 +1,4 @@
 import { format } from "date-fns";
-import { Exception } from "../utils/exceptionUtil";
 import { validateStringNotNullOrBlank } from "../utils/stringUtil";
 
 export interface ProductInformation {
@@ -244,7 +243,7 @@ async function updateProduct(
   const currentDateTime = format(new Date(), "yyyy-MM-dd HH:mm:ss");
 
   if (field == null) {
-    throw new Exception("Field value cannot be null to update product");
+    throw new Error("Field value cannot be null to update product");
   }
 
   return await new Promise<void>((resolve, reject) => {
