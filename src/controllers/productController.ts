@@ -160,8 +160,8 @@ export async function linkUpsellProductByIds(
   request: any,
   reply: any
 ): Promise<any> {
-  const productId = request.body.product_id;
-  const upsellProductId = request.body.upsell_product_id;
+  const productId: number = request.body.product_id;
+  const upsellProductId: number = request.body.upsell_product_id;
 
   if (!isValidLinkUpsellProductFields(productId, upsellProductId)) {
     return reply.status(400).send({
@@ -200,7 +200,7 @@ export async function getProductUpsellProducts(
   request: any,
   reply: any
 ): Promise<any> {
-  const productId = request.body.product_id;
+  const productId: number = request.body.product_id;
 
   if (typeof productId !== "number" || productId == null) {
     return reply.status(400).send({
@@ -232,7 +232,7 @@ export async function unlinkProductUpsellProduct(
   request: any,
   reply: any
 ): Promise<any> {
-  const productId = request.body.product_id;
+  const productId: number = request.body.product_id;
 
   if (typeof productId !== "number" || productId == null) {
     return reply.status(400).send({

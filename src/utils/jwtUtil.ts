@@ -8,7 +8,7 @@ dotenv.config();
 const JWT_SECRET: string = process.env.JWT_SECRET!;
 
 export const generateToken = (user: UserCredentials): string => {
-  const oneYearInSeconds = 365 * 24 * 60 * 60;
+  const oneYearInSeconds: number = 365 * 24 * 60 * 60;
   return jwt.sign({ emailAddress: user.emailAddress }, JWT_SECRET, {
     expiresIn: oneYearInSeconds,
   });

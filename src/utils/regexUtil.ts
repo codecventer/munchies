@@ -7,13 +7,13 @@ export function validatePasswordStrength(password: string): {
   isStrong: boolean;
   message: string;
 } {
-  const minLength = 8;
+  const minLength: number = 8;
   const hasUpperCase = /[A-Z]/.test(password);
   const hasLowerCase = /[a-z]/.test(password);
   const hasDigit = /[0-9]/.test(password);
   const hasSpecialChar = /[!@#$%^&*()\-_=+{};:,<.>]/.test(password);
 
-  const isStrong =
+  const isStrong: boolean =
     password.length >= minLength &&
     hasUpperCase &&
     hasLowerCase &&

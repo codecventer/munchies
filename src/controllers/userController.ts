@@ -96,12 +96,12 @@ export async function loginUser(request: any, reply: any): Promise<any> {
 
 async function findUserByEmail(emailAddress: string): Promise<user | null> {
   try {
-    const userFoo = await user.findOne({
+    const existingUser = await user.findOne({
       where: {
         emailAddress: emailAddress,
       },
     });
-    return userFoo;
+    return existingUser;
   } catch (error: any) {
     throw new Error(`Error finding user by email: ${error.message}`);
   }
