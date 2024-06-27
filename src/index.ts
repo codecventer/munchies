@@ -12,6 +12,7 @@ import {
   unlinkProductUpsellProduct,
   updateProductByField as updateProductByField,
 } from "./controllers/productController";
+import { addNewTransaction } from "./controllers/transactionController";
 
 dotenv.config();
 
@@ -95,6 +96,14 @@ fastify.post(
   { preHandler: authenticateJWT },
   async (request, reply) => {
     await unlinkProductUpsellProduct(request, reply);
+  }
+);
+
+fastify.post(
+  "/transactions/add-transaction",
+  { preHandler: authenticateJWT },
+  async (request, reply) => {
+    await addNewTransaction(request, reply);
   }
 );
 

@@ -264,6 +264,20 @@ export async function unlinkProductUpsellProduct(
   }
 }
 
+export async function findProductById(productId: number): Promise<any> {
+  try {
+    const productById = await product.findOne({
+      where: {
+        id: productId,
+      },
+    });
+
+    return productById;
+  } catch (error: any) {
+    throw new Error(`Error finding product by name: ${error.message}`);
+  }
+}
+
 async function findProductByName(productName: string): Promise<any> {
   try {
     const productByName = await product.findOne({
@@ -273,20 +287,6 @@ async function findProductByName(productName: string): Promise<any> {
     });
 
     return productByName;
-  } catch (error: any) {
-    throw new Error(`Error finding product by name: ${error.message}`);
-  }
-}
-
-async function findProductById(productId: number): Promise<any> {
-  try {
-    const productById = await product.findOne({
-      where: {
-        id: productId,
-      },
-    });
-
-    return productById;
   } catch (error: any) {
     throw new Error(`Error finding product by name: ${error.message}`);
   }
