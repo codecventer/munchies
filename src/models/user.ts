@@ -1,18 +1,18 @@
-import { Sequelize, DataTypes, Model, Optional } from "sequelize";
-
-const sequelize = new Sequelize(process.env.DB_CONNECTION_STRING || "");
+import { DataTypes, Model } from "sequelize";
+import sequelize from "../config/database";
 
 interface UserAttributes {
   id: number;
   emailAddress: string;
   password: string;
-  jwtToken?: string | null;
+  jwtToken: string | null;
   createdAt: Date;
 }
 
-interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
+interface UserCreationAttributes
+  extends Omit<UserAttributes, "id" | "createdAt"> {}
 
-class User
+class user
   extends Model<UserAttributes, UserCreationAttributes>
   implements UserAttributes
 {
@@ -23,7 +23,7 @@ class User
   public createdAt!: Date;
 }
 
-User.init(
+user.init(
   {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -45,18 +45,17 @@ User.init(
     },
     createdAt: {
       type: DataTypes.DATE,
-      allowNull: false,
       defaultValue: DataTypes.NOW,
-      field: "created_at",
+      allowNull: false,
     },
   },
   {
     sequelize,
-    modelName: "User",
     tableName: "Users",
-    timestamps: true,
-    underscored: true,
+    modelName: "User",
+    timestamps: false,
+    underscored: false,
   }
 );
 
-export default User;
+export default user;

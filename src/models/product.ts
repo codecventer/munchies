@@ -1,6 +1,5 @@
-import { Sequelize, DataTypes, Model, Optional } from "sequelize";
-
-const sequelize = new Sequelize(process.env.DB_CONNECTION_STRING || "");
+import { DataTypes, Model } from "sequelize";
+import sequelize from "../config/database";
 
 interface ProductAttributes {
   id: number;
@@ -9,13 +8,14 @@ interface ProductAttributes {
   price: number;
   quantity: number;
   deleted: boolean;
-  created_at: Date;
-  updatedAt: Date;
+  updatedAt: Date | null;
+  createdAt: Date;
 }
 
-interface ProductCreationAttributes extends Optional<ProductAttributes, "id"> {}
+interface ProductCreationAttributes
+  extends Omit<ProductAttributes, "id" | "updatedAt" | "createdAt"> {}
 
-class Product
+class product
   extends Model<ProductAttributes, ProductCreationAttributes>
   implements ProductAttributes
 {
@@ -25,11 +25,11 @@ class Product
   public price!: number;
   public quantity!: number;
   public deleted!: boolean;
-  public created_at!: Date;
-  public updatedAt!: Date;
+  public updatedAt!: Date | null;
+  public createdAt!: Date;
 }
 
-Product.init(
+product.init(
   {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -58,25 +58,24 @@ Product.init(
       allowNull: false,
       defaultValue: false,
     },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
     updatedAt: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
+      defaultValue: null,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
-      field: "updated_at",
+      allowNull: false,
     },
   },
   {
     sequelize,
-    modelName: "Product",
     tableName: "Products",
-    timestamps: true,
-    underscored: true,
+    modelName: "Product",
+    timestamps: false,
+    underscored: false,
   }
 );
 
-export default Product;
+export default product;

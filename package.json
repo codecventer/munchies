@@ -12,9 +12,7 @@
   "author": "Christiaan Venter",
   "license": "ISC",
   "dependencies": {
-    "@fastify/mysql": "^4.3.0",
     "bcrypt": "^5.1.1",
-    "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "fastify": "^4.28.0",
     "jsonwebtoken": "^9.0.2",

@@ -1,6 +1,4 @@
 import Fastify from "fastify";
-import mysql from "@fastify/mysql";
-import { MySQLPool } from "@fastify/mysql";
 import * as dotenv from "dotenv";
 import { authenticateJWT } from "./utils/jwtUtil";
 import { registerUser, loginUser } from "./controllers/userController";
@@ -11,38 +9,33 @@ import {
   getAllProducts,
   updateProductByField as updateProductByField,
 } from "./controllers/productController";
-import { userRouteOptions } from "./utils/routeOptionsUtil";
 
 dotenv.config();
 
 const fastify = Fastify({ logger: true });
 const PORT: number = parseInt(process.env.PORT || "8080", 10);
 
-declare module "fastify" {
-  interface FastifyInstance {
-    mysql: MySQLPool;
+fastify.post(
+  "/users/register",
+  { preHandler: authenticateJWT },
+  async (request, reply) => {
+    await registerUser(request, reply);
   }
-}
+);
 
-fastify.register(mysql, {
-  connectionString: process.env.DB_CONNECTION_STRING,
-});
-
-//TODO: SECURE ENDPOINT
-fastify.post("/users/register", userRouteOptions, async (request, reply) => {
-  await registerUser(fastify, request, reply);
-});
-
-//TODO: SECURE ENDPOINT
-fastify.post("/users/login", userRouteOptions, async (request, reply) => {
-  await loginUser(fastify, request, reply);
-});
+fastify.post(
+  "/users/login",
+  { preHandler: authenticateJWT },
+  async (request, reply) => {
+    await loginUser(request, reply);
+  }
+);
 
 fastify.get(
   "/products/all-products",
   { preHandler: authenticateJWT },
   async (request, reply) => {
-    await getAllProducts(fastify, reply);
+    await getAllProducts(reply);
   }
 );
 
@@ -50,34 +43,31 @@ fastify.get(
   "/products/all-active-products",
   { preHandler: authenticateJWT },
   async (request, reply) => {
-    await getAllActiveProducts(fastify, reply);
+    await getAllActiveProducts(reply);
   }
 );
 
-//TODO: USE PRODUCT ROUTE OPTION
 fastify.post(
   "/products/add-product",
   { preHandler: authenticateJWT },
   async (request, reply) => {
-    await addNewProduct(fastify, request, reply);
+    await addNewProduct(request, reply);
   }
 );
 
-//TODO: USE PRODUCT ROUTE OPTION
 fastify.post(
   "/products/delete-product",
   { preHandler: authenticateJWT },
   async (request, reply) => {
-    await deleteProductByName(fastify, request, reply);
+    await deleteProductByName(request, reply);
   }
 );
 
-//TODO: USE PRODUCT ROUTE OPTION
 fastify.post(
   "/products/update-product",
   { preHandler: authenticateJWT },
   async (request, reply) => {
-    await updateProductByField(fastify, request, reply);
+    await updateProductByField(request, reply);
   }
 );
 

@@ -1,5 +1,5 @@
-import { format } from "date-fns";
 import { validateStringNotNullOrBlank } from "../utils/stringUtil";
+import product from "../models/product";
 
 export interface ProductInformation {
   name: string;
@@ -8,54 +8,36 @@ export interface ProductInformation {
   quantity: number;
 }
 
-export async function getAllProducts(fastify: any, reply: any): Promise<any> {
-  return await new Promise<any>((resolve, reject) => {
-    fastify.mysql.query(
-      `SELECT * FROM munch_pos.Products`,
-      (error: any, result: any[]) => {
-        if (error) {
-          reject(error);
-          reply.status(400).send({
-            error: "Failed to get all products",
-            message: error.message,
-          });
-        } else {
-          resolve(result);
-          reply.status(200).send(result);
-        }
-      }
-    );
-  });
+export async function getAllProducts(reply: any): Promise<any> {
+  try {
+    const allProducts = await product.findAll();
+    reply.status(200).send(allProducts);
+  } catch (error: any) {
+    reply
+      .status(400)
+      .send({ error: "Failed to get all products", message: error.message });
+    throw new Error(`Failed to get all products: ${error.message}`);
+  }
 }
 
-export async function getAllActiveProducts(
-  fastify: any,
-  reply: any
-): Promise<any> {
-  return await new Promise<any>((resolve, reject) => {
-    fastify.mysql.query(
-      `SELECT * FROM munch_pos.Products WHERE deleted = false`,
-      (error: any, result: any[]) => {
-        if (error) {
-          reject(error);
-          reply.status(400).send({
-            error: "Failed to get all active products",
-            message: error.message,
-          });
-        } else {
-          resolve(result);
-          reply.status(200).send(result);
-        }
-      }
-    );
-  });
+export async function getAllActiveProducts(reply: any): Promise<any> {
+  try {
+    const activeProducts = await product.findAll({
+      where: {
+        deleted: false,
+      },
+    });
+    reply.status(200).send(activeProducts);
+  } catch (error: any) {
+    reply.status(400).send({
+      error: "Failed to get all active products",
+      message: error.message,
+    });
+    throw new Error(`Failed to get all active products: ${error.message}`);
+  }
 }
 
-export async function addNewProduct(
-  fastify: any,
-  request: any,
-  reply: any
-): Promise<any> {
+export async function addNewProduct(request: any, reply: any): Promise<any> {
   const { name, price, description, quantity }: ProductInformation =
     request.body as ProductInformation;
 
@@ -71,16 +53,16 @@ export async function addNewProduct(
   }
 
   try {
-    const existingProduct = await findProductByName(fastify, name);
+    const existingProduct = await findProductByName(name);
 
-    if (existingProduct.length) {
+    if (existingProduct != null) {
       return reply.status(400).send({
         error: "Failed to add product",
         message: `Product with name '${name}' already exists`,
       });
     }
 
-    await addProduct(fastify, name, price, description, quantity).then(() => {
+    await addProduct(name, price, description, quantity).then(() => {
       reply.status(200).send({ message: "Successfully added new product" });
     });
   } catch (error: any) {
@@ -91,7 +73,6 @@ export async function addNewProduct(
 }
 
 export async function deleteProductByName(
-  fastify: any,
   request: any,
   reply: any
 ): Promise<any> {
@@ -104,9 +85,9 @@ export async function deleteProductByName(
     });
   }
 
-  const existingProduct = await findProductByName(fastify, productName);
+  const existingProduct = await findProductByName(productName);
 
-  if (!existingProduct.length) {
+  if (existingProduct == null) {
     return reply.status(400).send({
       error: "Failed to delete product",
       message: `Could not find product with name '${productName}'`,
@@ -114,7 +95,7 @@ export async function deleteProductByName(
   }
 
   try {
-    await deleteProduct(fastify, productName).then(() => {
+    await deleteProduct(productName).then(() => {
       reply.status(200).send({ message: "Successfully deleted product" });
     });
   } catch (error: any) {
@@ -125,7 +106,6 @@ export async function deleteProductByName(
 }
 
 export async function updateProductByField(
-  fastify: any,
   request: any,
   reply: any
 ): Promise<any> {
@@ -133,9 +113,9 @@ export async function updateProductByField(
   const index: number = request.body.index;
   const value: string = request.body.value;
 
-  const existingProduct = await findProductByName(fastify, name);
+  const existingProduct = await findProductByName(name);
 
-  if (!existingProduct.length) {
+  if (existingProduct == null) {
     return reply.status(400).send({
       error: "Failed to delete product",
       message: `Could not find product with name '${name}'`,
@@ -166,7 +146,7 @@ export async function updateProductByField(
   }
 
   try {
-    await updateProduct(fastify, name, index, value).then(() => {
+    await updateProduct(name, index, value).then(() => {
       reply.status(200).send({ message: "Successfully updated product" });
     });
   } catch (error: any) {
@@ -176,89 +156,87 @@ export async function updateProductByField(
   }
 }
 
-async function findProductByName(
-  fastify: any,
-  productName: string
-): Promise<any> {
-  return await new Promise<any>((resolve, reject) => {
-    fastify.mysql.query(
-      `SELECT * FROM munch_pos.Products WHERE name = ?`,
-      [productName],
-      (error: any, result: any[]) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(result);
-        }
-      }
-    );
-  });
+async function findProductByName(productName: string): Promise<any> {
+  try {
+    const productByName = await product.findOne({
+      where: {
+        name: productName,
+      },
+    });
+
+    return productByName;
+  } catch (error: any) {
+    throw new Error(`Error finding product by name: ${error.message}`);
+  }
 }
 
 async function addProduct(
-  fastify: any,
   name: string,
   price: number,
   description: string,
   quantity: number
 ): Promise<void> {
-  return await new Promise<void>(async (resolve, reject) => {
-    fastify.mysql.query(
-      `INSERT INTO munch_pos.Products (name, description, price, quantity, deleted) VALUES (?, ?, ?, ?, false)`,
-      [name, description, price, quantity],
-      (error: any) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
-      }
-    );
-  });
+  try {
+    await product.create({
+      name: name,
+      description: description,
+      price: price,
+      quantity: quantity,
+      deleted: false,
+    });
+
+    return;
+  } catch (error: any) {
+    throw new Error(`Error adding product: ${error.message}`);
+  }
 }
 
-async function deleteProduct(fastify: any, name: string): Promise<void> {
-  return await new Promise<void>(async (resolve, reject) => {
-    fastify.mysql.query(
-      `UPDATE munch_pos.Products SET deleted = true WHERE name = ?`,
-      [name],
-      (error: any) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
+async function deleteProduct(name: string): Promise<void> {
+  try {
+    await product.update(
+      { deleted: true },
+      {
+        where: {
+          name: name,
+        },
       }
     );
-  });
+
+    return;
+  } catch (error: any) {
+    throw new Error(`Error deleting product: ${error.message}`);
+  }
 }
 
 async function updateProduct(
-  fastify: any,
   name: string,
   index: number,
   value: string
 ): Promise<void> {
-  const field: string | null = getColumnNameByIndex(index);
-  const currentDateTime = format(new Date(), "yyyy-MM-dd HH:mm:ss");
+  try {
+    const field: string | null = getColumnNameByIndex(index);
+    const currentDateTime = new Date();
 
-  if (field == null) {
-    throw new Error("Field value cannot be null to update product");
-  }
+    if (field == null) {
+      throw new Error("Field value cannot be null to update product");
+    }
 
-  return await new Promise<void>((resolve, reject) => {
-    fastify.mysql.query(
-      `UPDATE munch_pos.Products SET \`${field}\` = ?, updated_at = ? WHERE name = ?`,
-      [value, currentDateTime, name],
-      (error: any) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
+    await product.update(
+      {
+        [field]: value,
+        updatedAt: currentDateTime,
+      },
+      {
+        where: {
+          name: name,
+        },
       }
     );
-  });
+
+    return;
+  } catch (error: any) {
+    throw new Error(`Error updating product: ${error.message}`);
+  }
 }
 
 function validateAddProductFields(

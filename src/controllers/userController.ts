@@ -1,3 +1,4 @@
+import user from "../models/user";
 import { generateToken } from "../utils/jwtUtil";
 import { encryptPassword, isCorrectPassword } from "../utils/passwordUtil";
 import { isValidEmail, validatePasswordStrength } from "../utils/regexUtil";
@@ -8,11 +9,7 @@ export interface UserCredentials {
   jwtToken?: string;
 }
 
-export async function registerUser(
-  fastify: any,
-  request: any,
-  reply: any
-): Promise<any> {
+export async function registerUser(request: any, reply: any): Promise<any> {
   const { emailAddress, password }: UserCredentials =
     request.body as UserCredentials;
 
@@ -33,16 +30,16 @@ export async function registerUser(
   }
 
   try {
-    const existingUser = await findUserByEmail(fastify, emailAddress);
+    const existingUser = await findUserByEmail(emailAddress);
 
-    if (existingUser.length) {
+    if (existingUser != null) {
       return reply.status(400).send({
         error: "User already exists",
         message: `User email address '${emailAddress}' already registered`,
       });
     }
 
-    await addUser(fastify, emailAddress, password).then(() => {
+    await addUser(emailAddress, password).then(() => {
       reply.status(200).send({ message: "User registration successful" });
     });
   } catch (error: any) {
@@ -52,34 +49,34 @@ export async function registerUser(
   }
 }
 
-export async function loginUser(
-  fastify: any,
-  request: any,
-  reply: any
-): Promise<any> {
+export async function loginUser(request: any, reply: any): Promise<any> {
   const { emailAddress, password }: UserCredentials =
     request.body as UserCredentials;
 
   try {
-    const existingUser = await findUserByEmail(fastify, emailAddress);
+    const existingUser = await findUserByEmail(emailAddress);
 
-    if (!existingUser.length) {
+    if (existingUser == null) {
       return reply.status(400).send({
         error: "User not found",
         message: `User with email '${emailAddress}' does not exist`,
       });
     }
 
-    const hashedPassword: string = existingUser[0].password;
+    const hashedPassword: string = existingUser.dataValues.password;
     const isPasswordCorrect: boolean = await isCorrectPassword(
       password,
       hashedPassword
     );
 
     if (isPasswordCorrect) {
-      const jwtToken: string = generateToken(existingUser[0]);
+      const userCredentials: UserCredentials = {
+        emailAddress: emailAddress,
+        password: password,
+      };
+      const jwtToken: string = generateToken(userCredentials);
 
-      await updateUserJwtToken(fastify, emailAddress, jwtToken).then(() => {
+      await updateUserJwtToken(emailAddress, jwtToken).then(() => {
         reply
           .status(200)
           .send({ message: "User login successful", token: jwtToken });
@@ -97,63 +94,46 @@ export async function loginUser(
   }
 }
 
-async function findUserByEmail(
-  fastify: any,
-  emailAddress: string
-): Promise<any> {
-  return await new Promise<any>((resolve, reject) => {
-    fastify.mysql.query(
-      `SELECT * FROM munch_pos.Users WHERE emailAddress = ?`,
-      [emailAddress],
-      (error: any, result: any[]) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(result);
-        }
-      }
-    );
-  });
+async function findUserByEmail(emailAddress: string): Promise<user | null> {
+  try {
+    const userFoo = await user.findOne({
+      where: {
+        emailAddress: emailAddress,
+      },
+    });
+    return userFoo;
+  } catch (error: any) {
+    throw new Error(`Error finding user by email: ${error.message}`);
+  }
 }
 
-async function addUser(
-  fastify: any,
-  emailAddress: string,
-  password: string
-): Promise<void> {
-  return await new Promise<void>(async (resolve, reject) => {
+async function addUser(emailAddress: string, password: string): Promise<void> {
+  try {
     const hashedPassword: string = await encryptPassword(password);
 
-    fastify.mysql.query(
-      `INSERT INTO munch_pos.Users (emailAddress, password) VALUES (?, ?)`,
-      [emailAddress, hashedPassword],
-      (error: any) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
-      }
-    );
-  });
+    await user.create({
+      emailAddress: emailAddress,
+      password: hashedPassword,
+    });
+
+    return;
+  } catch (error: any) {
+    throw new Error(`Error adding user: ${error.message}`);
+  }
 }
 
 async function updateUserJwtToken(
-  fastify: any,
   emailAddress: string,
   jwtToken: string
-): Promise<any> {
-  await new Promise<any>((resolve, reject) => {
-    fastify.mysql.query(
-      `UPDATE munch_pos.Users SET jwtToken = ? WHERE emailAddress = ?`,
-      [jwtToken, emailAddress],
-      (error: any, result: any[]) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(result);
-        }
-      }
+): Promise<void> {
+  try {
+    await user.update(
+      { jwtToken: jwtToken },
+      { where: { emailAddress: emailAddress } }
     );
-  });
+
+    return;
+  } catch (error: any) {
+    throw new Error(`Error updating jwtToken: ${error.message}`);
+  }
 }
