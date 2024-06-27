@@ -196,6 +196,38 @@ export async function linkUpsellProductByIds(
   }
 }
 
+export async function getProductUpsellProducts(
+  request: any,
+  reply: any
+): Promise<any> {
+  const productId = request.body.product_id;
+
+  if (typeof productId !== "number" || productId == null) {
+    return reply.status(400).send({
+      error: "Failed to get upsell products",
+      message: "Missing field(s) or request parameters are not integers",
+    });
+  }
+
+  const existingProduct = await findProductById(productId);
+
+  if (existingProduct == null) {
+    return reply.status(400).send({
+      error: "Failed to get upsell products",
+      message: `Product with ID '${productId}' not found`,
+    });
+  }
+
+  try {
+    const upsellProducts = await getUpsellProducts(productId);
+    reply.status(200).send(upsellProducts);
+  } catch (error: any) {
+    reply
+      .status(400)
+      .send({ error: "Failed to get upsell products", message: error.message });
+  }
+}
+
 async function findProductByName(productName: string): Promise<any> {
   try {
     const productByName = await product.findOne({
@@ -312,6 +344,20 @@ async function linkUpsellProduct(
     return;
   } catch (error: any) {
     throw new Error(`Error linking upsell product: ${error.message}`);
+  }
+}
+
+async function getUpsellProducts(productId: number): Promise<any> {
+  try {
+    const upsellProducts = await product.findAll({
+      where: {
+        upsellProductId: productId,
+      },
+    });
+
+    return upsellProducts;
+  } catch (error: any) {
+    throw new Error(`Error finding upsell products: ${error.message}`);
   }
 }
 

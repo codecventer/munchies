@@ -7,6 +7,7 @@ import {
   deleteProductByName,
   getAllActiveProducts,
   getAllProducts,
+  getProductUpsellProducts,
   linkUpsellProductByIds,
   updateProductByField as updateProductByField,
 } from "./controllers/productController";
@@ -77,6 +78,14 @@ fastify.post(
   { preHandler: authenticateJWT },
   async (request, reply) => {
     await linkUpsellProductByIds(request, reply);
+  }
+);
+
+fastify.post(
+  "/products/product-upsell-products",
+  { preHandler: authenticateJWT },
+  async (request, reply) => {
+    await getProductUpsellProducts(request, reply);
   }
 );
 
