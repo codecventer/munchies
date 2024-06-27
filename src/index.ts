@@ -7,6 +7,7 @@ import {
   deleteProductByName,
   getAllActiveProducts,
   getAllProducts,
+  linkUpsellProductByIds,
   updateProductByField as updateProductByField,
 } from "./controllers/productController";
 
@@ -17,7 +18,7 @@ const PORT: number = parseInt(process.env.PORT || "8080", 10);
 
 fastify.post(
   "/users/register",
-  { preHandler: authenticateJWT },
+  // { preHandler: authenticateJWT }, //TODO: REFACTOR
   async (request, reply) => {
     await registerUser(request, reply);
   }
@@ -25,7 +26,7 @@ fastify.post(
 
 fastify.post(
   "/users/login",
-  { preHandler: authenticateJWT },
+  // { preHandler: authenticateJWT }, //TODO: REFACTOR
   async (request, reply) => {
     await loginUser(request, reply);
   }
@@ -68,6 +69,14 @@ fastify.post(
   { preHandler: authenticateJWT },
   async (request, reply) => {
     await updateProductByField(request, reply);
+  }
+);
+
+fastify.post(
+  "/products/link-upsell-product",
+  { preHandler: authenticateJWT },
+  async (request, reply) => {
+    await linkUpsellProductByIds(request, reply);
   }
 );
 

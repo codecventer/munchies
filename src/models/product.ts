@@ -8,6 +8,7 @@ interface ProductAttributes {
   price: number;
   quantity: number;
   deleted: boolean;
+  upsellProductId: number | null;
   updatedAt: Date | null;
   createdAt: Date;
 }
@@ -25,6 +26,7 @@ class product
   public price!: number;
   public quantity!: number;
   public deleted!: boolean;
+  public upsellProductId!: number | null;
   public updatedAt!: Date | null;
   public createdAt!: Date;
 }
@@ -57,6 +59,11 @@ product.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
+    },
+    upsellProductId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: null,
     },
     updatedAt: {
       type: DataTypes.DATE,

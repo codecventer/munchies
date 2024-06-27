@@ -129,7 +129,7 @@ export async function updateProductByField(
     });
   }
 
-  if (!validateIndexValueType(index, value)) {
+  if (!isValidIndexValueType(index, value)) {
     return reply.status(400).send({
       error: "Failed to update product",
       message: `Value of '${value}' is incorrect data type for index '${index}'`,
@@ -156,6 +156,46 @@ export async function updateProductByField(
   }
 }
 
+export async function linkUpsellProductByIds(
+  request: any,
+  reply: any
+): Promise<any> {
+  const productId = request.body.product_id;
+  const upsellProductId = request.body.upsell_product_id;
+
+  if (!isValidLinkUpsellProductFields(productId, upsellProductId)) {
+    return reply.status(400).send({
+      error: "Failed to link upsell product",
+      message: "Missing field(s) or request parameters are not integers",
+    });
+  }
+
+  const baseProduct = await findProductById(productId);
+  const upsellProduct = await findProductById(upsellProductId);
+
+  if (baseProduct == null) {
+    return reply.status(400).send({
+      error: "Failed to link upsell product",
+      message: `Product with ID '${productId}' not found`,
+    });
+  } else if (upsellProduct == null) {
+    return reply.status(400).send({
+      error: "Failed to link upsell product",
+      message: `Product with ID '${upsellProductId}' not found`,
+    });
+  }
+
+  try {
+    await linkUpsellProduct(productId, upsellProductId).then(() => {
+      reply.status(200).send({ message: "Successfully linked upsell product" });
+    });
+  } catch (error: any) {
+    reply
+      .status(400)
+      .send({ error: "Failed to link upsell product", message: error.message });
+  }
+}
+
 async function findProductByName(productName: string): Promise<any> {
   try {
     const productByName = await product.findOne({
@@ -165,6 +205,20 @@ async function findProductByName(productName: string): Promise<any> {
     });
 
     return productByName;
+  } catch (error: any) {
+    throw new Error(`Error finding product by name: ${error.message}`);
+  }
+}
+
+async function findProductById(productId: number): Promise<any> {
+  try {
+    const productById = await product.findOne({
+      where: {
+        id: productId,
+      },
+    });
+
+    return productById;
   } catch (error: any) {
     throw new Error(`Error finding product by name: ${error.message}`);
   }
@@ -239,6 +293,28 @@ async function updateProduct(
   }
 }
 
+async function linkUpsellProduct(
+  productId: number,
+  upsellProductId: number
+): Promise<void> {
+  try {
+    await product.update(
+      {
+        upsellProductId: upsellProductId,
+      },
+      {
+        where: {
+          id: productId,
+        },
+      }
+    );
+
+    return;
+  } catch (error: any) {
+    throw new Error(`Error linking upsell product: ${error.message}`);
+  }
+}
+
 function validateAddProductFields(
   name: string,
   price: number,
@@ -271,7 +347,7 @@ function validateAddProductFields(
   return null;
 }
 
-function validateIndexValueType(index: number, value: any): boolean {
+function isValidIndexValueType(index: number, value: any): boolean {
   if (index === 0 || index === 1) {
     return typeof value === "string";
   }
@@ -293,4 +369,16 @@ function getColumnNameByIndex(index: number): string | null {
     : index === 3
     ? "quantity"
     : null;
+}
+
+function isValidLinkUpsellProductFields(
+  productId: number,
+  upsellProductId: number
+): boolean {
+  return (
+    typeof productId === "number" &&
+    typeof productId != null &&
+    typeof upsellProductId === "number" &&
+    typeof upsellProductId != null
+  );
 }
