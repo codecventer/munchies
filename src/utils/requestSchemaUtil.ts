@@ -15,9 +15,9 @@ export const addProductSchema = {
     type: "object",
     properties: {
       name: { type: "string" },
-      price: { type: "number" },
+      price: { type: ["integer", "number"] },
       description: { type: "string" },
-      quantity: { type: "number" },
+      quantity: { type: "integer" },
     },
     required: ["name", "price", "description", "quantity"],
     additionalProperties: false,
@@ -40,8 +40,8 @@ export const updateProductSchema = {
     type: "object",
     properties: {
       name: { type: "string" },
-      index: { type: "number" },
-      value: { type: ["string", "number"] },
+      index: { type: "integer" },
+      value: { type: ["string", "integer"] },
     },
     required: ["name", "index", "value"],
     additionalProperties: false,
@@ -52,8 +52,8 @@ export const linkUpsellProductSchema = {
   body: {
     type: "object",
     properties: {
-      product_id: { type: "number" },
-      upsell_product_id: { type: "number" },
+      product_id: { type: "integer" },
+      upsell_product_id: { type: "integer" },
     },
     required: ["product_id", "upsell_product_id"],
     additionalProperties: false,
@@ -64,7 +64,7 @@ export const productUpsellProductsSchema = {
   body: {
     type: "object",
     properties: {
-      product_id: { type: "number" },
+      product_id: { type: "integer" },
     },
     required: ["product_id"],
     additionalProperties: false,
@@ -75,7 +75,7 @@ export const unlinkUpsellProductSchema = {
   body: {
     type: "object",
     properties: {
-      product_id: { type: "number" },
+      product_id: { type: "integer" },
     },
     required: ["product_id"],
     additionalProperties: false,
@@ -86,9 +86,9 @@ export const addTransactionSchema = {
   body: {
     type: "object",
     properties: {
-      product_id: { type: "number" },
-      quantity: { type: "number" },
-      total: { type: "number" },
+      product_id: { type: "integer" },
+      quantity: { type: "integer" },
+      total: { type: ["integer", "number"] },
     },
     required: ["product_id", "quantity", "total"],
     additionalProperties: false,

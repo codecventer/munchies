@@ -1,7 +1,7 @@
 import user from "../models/user";
 import { generateToken } from "../utils/jwtUtil";
 import { encryptPassword, isCorrectPassword } from "../utils/passwordUtil";
-import { isValidEmail, validatePasswordStrength } from "../utils/regexUtil";
+import { validatePasswordStrength } from "../utils/regexUtil";
 
 export interface UserCredentials {
   emailAddress: string;
@@ -19,13 +19,6 @@ export async function registerUser(request: any, reply: any): Promise<any> {
     return reply.status(400).send({
       error: "Weak password",
       message: validatedPassword.message,
-    });
-  }
-
-  if (!isValidEmail(emailAddress)) {
-    return reply.status(400).send({
-      error: "Invalid email",
-      message: "Email address is not valid",
     });
   }
 

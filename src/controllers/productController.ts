@@ -51,17 +51,6 @@ export async function addNewProduct(request: any, reply: any): Promise<any> {
   const { name, price, description, quantity }: ProductInformation =
     request.body as ProductInformation;
 
-  const fieldValidationErrors: string | null = validateAddProductFields(
-    name,
-    price,
-    description,
-    quantity
-  );
-
-  if (fieldValidationErrors) {
-    return reply.status(400).send({ error: fieldValidationErrors });
-  }
-
   try {
     const existingProduct = await findProductByName(name);
 
@@ -173,10 +162,10 @@ export async function linkUpsellProductByIds(
   const productId: number = request.body.product_id;
   const upsellProductId: number = request.body.upsell_product_id;
 
-  if (!isValidLinkUpsellProductFields(productId, upsellProductId)) {
+  if (productId == upsellProductId) {
     return reply.status(400).send({
       error: "Failed to link upsell product",
-      message: "Missing field(s) or request parameters are not integers",
+      message: "Cannot link product with itself",
     });
   }
 
@@ -186,12 +175,12 @@ export async function linkUpsellProductByIds(
   if (baseProduct == null) {
     return reply.status(400).send({
       error: "Failed to link upsell product",
-      message: `Product with ID '${productId}' not found`,
+      message: `Product with id '${productId}' not found`,
     });
   } else if (upsellProduct == null) {
     return reply.status(400).send({
       error: "Failed to link upsell product",
-      message: `Product with ID '${upsellProductId}' not found`,
+      message: `Product with id '${upsellProductId}' not found`,
     });
   }
 
@@ -211,20 +200,12 @@ export async function getProductUpsellProducts(
   reply: any
 ): Promise<any> {
   const productId: number = request.body.product_id;
-
-  if (typeof productId !== "number" || productId == null) {
-    return reply.status(400).send({
-      error: "Failed to get upsell products",
-      message: "Missing field(s) or request parameters are not integers",
-    });
-  }
-
   const existingProduct = await findProductById(productId);
 
   if (existingProduct == null) {
     return reply.status(400).send({
       error: "Failed to get upsell products",
-      message: `Product with ID '${productId}' not found`,
+      message: `Product with id '${productId}' not found`,
     });
   }
 
@@ -248,20 +229,12 @@ export async function unlinkProductUpsellProduct(
   reply: any
 ): Promise<any> {
   const productId: number = request.body.product_id;
-
-  if (typeof productId !== "number" || productId == null) {
-    return reply.status(400).send({
-      error: "Failed to unlink upsell product",
-      message: "Missing field(s) or request parameters are not integers",
-    });
-  }
-
   const existingProduct = await findProductById(productId);
 
   if (existingProduct == null) {
     return reply.status(400).send({
       error: "Failed to unlink upsell product",
-      message: `Product with ID '${productId}' not found`,
+      message: `Product with id '${productId}' not found`,
     });
   }
 
@@ -431,38 +404,6 @@ async function unlinkUpsellProduct(productId: number): Promise<void> {
   }
 }
 
-function validateAddProductFields(
-  name: string,
-  price: number,
-  description: string,
-  quantity: number
-): string | null {
-  if (!name || !price || !description || !quantity) {
-    return "Required fields: name, price, description, quantity";
-  }
-
-  const errors: string[] = [];
-
-  if (typeof name !== "string") {
-    errors.push("Invalid data type for 'name', expected string.");
-  }
-  if (typeof description !== "string") {
-    errors.push("Invalid data type for 'description', expected string.");
-  }
-  if (typeof price !== "number") {
-    errors.push("Invalid data type for 'price', expected number.");
-  }
-  if (typeof quantity !== "number") {
-    errors.push("Invalid data type for 'quantity', expected number.");
-  }
-
-  if (errors.length > 0) {
-    return errors.join(" ");
-  }
-
-  return null;
-}
-
 function isValidIndexValueType(index: number, value: any): boolean {
   if (index === 0 || index === 1) {
     return typeof value === "string";
@@ -485,16 +426,4 @@ function getColumnNameByIndex(index: number): string | null {
     : index === 3
     ? "quantity"
     : null;
-}
-
-function isValidLinkUpsellProductFields(
-  productId: number,
-  upsellProductId: number
-): boolean {
-  return (
-    typeof productId === "number" &&
-    typeof productId != null &&
-    typeof upsellProductId === "number" &&
-    typeof upsellProductId != null
-  );
 }
