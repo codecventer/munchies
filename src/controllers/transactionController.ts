@@ -19,7 +19,7 @@ interface TransactionResponse {
 }
 
 interface NewTransactionDetails {
-  productId: number;
+  product_id: number;
   quantity: number;
   total: number;
 }
@@ -28,20 +28,20 @@ export async function addNewTransaction(
   request: any,
   reply: any
 ): Promise<any> {
-  const { productId, quantity, total }: NewTransactionDetails =
+  const { product_id, quantity, total }: NewTransactionDetails =
     request.body as NewTransactionDetails;
 
-  const existingProduct = await findProductById(productId);
+  const existingProduct = await findProductById(product_id);
 
-  if (existingProduct == null) {
+  if (existingProduct == null || existingProduct.dataValues.deleted) {
     return reply.status(400).send({
       error: "Failed to add transaction",
-      message: `Product with id '${productId}' not found`,
+      message: `Product with id '${product_id}' not found`,
     });
   }
 
   try {
-    await addTransaction(productId, quantity, total).then(() => {
+    await addTransaction(product_id, quantity, total).then(() => {
       reply.status(200).send({ message: "Successfully added transaction" });
     });
   } catch (error: any) {
