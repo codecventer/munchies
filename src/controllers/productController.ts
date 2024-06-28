@@ -368,9 +368,12 @@ async function linkUpsellProduct(
   upsellProductId: number
 ): Promise<void> {
   try {
+    const currentDateTime = new Date();
+
     await product.update(
       {
         upsellProductId: upsellProductId,
+        updatedAt: currentDateTime,
       },
       {
         where: {
@@ -387,9 +390,12 @@ async function linkUpsellProduct(
 
 async function unlinkUpsellProduct(productId: number): Promise<void> {
   try {
+    const currentDateTime = new Date();
+
     await product.update(
       {
         upsellProductId: null,
+        updatedAt: currentDateTime,
       },
       {
         where: {
