@@ -11,6 +11,11 @@ export interface ProductInformation {
 export async function getAllProducts(reply: any): Promise<any> {
   try {
     const allProducts = await product.findAll();
+
+    if (allProducts == null || allProducts.length === 0) {
+      reply.status(200).send({ message: "No products found" });
+    }
+
     reply.status(200).send(allProducts);
   } catch (error: any) {
     reply
@@ -27,6 +32,11 @@ export async function getAllActiveProducts(reply: any): Promise<any> {
         deleted: false,
       },
     });
+
+    if (activeProducts == null || activeProducts.length === 0) {
+      reply.status(200).send({ message: "No active products found" });
+    }
+
     reply.status(200).send(activeProducts);
   } catch (error: any) {
     reply.status(400).send({
@@ -220,6 +230,11 @@ export async function getProductUpsellProducts(
 
   try {
     const upsellProducts = await getUpsellProducts(productId);
+
+    if (upsellProducts == null || upsellProducts.length === 0) {
+      reply.status(200).send({ message: "No upsell product(s) found" });
+    }
+
     reply.status(200).send(upsellProducts);
   } catch (error: any) {
     reply

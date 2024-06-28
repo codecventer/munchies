@@ -13,6 +13,16 @@ import {
   updateProductByField as updateProductByField,
 } from "./controllers/productController";
 import { addNewTransaction } from "./controllers/transactionController";
+import {
+  addProductSchema,
+  deleteProductSchema,
+  linkUpsellProductSchema,
+  productUpsellProductsSchema,
+  addTransactionSchema,
+  unlinkUpsellProductSchema,
+  updateProductSchema,
+  userSchema,
+} from "./utils/requestSchemaUtil";
 
 dotenv.config();
 
@@ -21,7 +31,7 @@ const PORT: number = parseInt(process.env.PORT || "8080", 10);
 
 fastify.post(
   "/users/register",
-  // { preHandler: authenticateJWT }, //TODO: REFACTOR
+  { schema: userSchema }, //TODO: JWT AUTHENTICATION
   async (request, reply) => {
     await registerUser(request, reply);
   }
@@ -29,7 +39,7 @@ fastify.post(
 
 fastify.post(
   "/users/login",
-  // { preHandler: authenticateJWT }, //TODO: REFACTOR
+  { schema: userSchema }, //TODO: JWT AUTHENTICATION
   async (request, reply) => {
     await loginUser(request, reply);
   }
@@ -53,7 +63,7 @@ fastify.get(
 
 fastify.post(
   "/products/add-product",
-  { preHandler: authenticateJWT },
+  { preHandler: authenticateJWT, schema: addProductSchema },
   async (request, reply) => {
     await addNewProduct(request, reply);
   }
@@ -61,7 +71,7 @@ fastify.post(
 
 fastify.post(
   "/products/delete-product",
-  { preHandler: authenticateJWT },
+  { preHandler: authenticateJWT, schema: deleteProductSchema },
   async (request, reply) => {
     await deleteProductByName(request, reply);
   }
@@ -69,7 +79,7 @@ fastify.post(
 
 fastify.post(
   "/products/update-product",
-  { preHandler: authenticateJWT },
+  { preHandler: authenticateJWT, schema: updateProductSchema },
   async (request, reply) => {
     await updateProductByField(request, reply);
   }
@@ -77,7 +87,7 @@ fastify.post(
 
 fastify.post(
   "/products/link-upsell-product",
-  { preHandler: authenticateJWT },
+  { preHandler: authenticateJWT, schema: linkUpsellProductSchema },
   async (request, reply) => {
     await linkUpsellProductByIds(request, reply);
   }
@@ -85,7 +95,7 @@ fastify.post(
 
 fastify.post(
   "/products/product-upsell-products",
-  { preHandler: authenticateJWT },
+  { preHandler: authenticateJWT, schema: productUpsellProductsSchema },
   async (request, reply) => {
     await getProductUpsellProducts(request, reply);
   }
@@ -93,7 +103,7 @@ fastify.post(
 
 fastify.post(
   "/products/unlink-upsell-product",
-  { preHandler: authenticateJWT },
+  { preHandler: authenticateJWT, schema: unlinkUpsellProductSchema },
   async (request, reply) => {
     await unlinkProductUpsellProduct(request, reply);
   }
@@ -101,7 +111,7 @@ fastify.post(
 
 fastify.post(
   "/transactions/add-transaction",
-  { preHandler: authenticateJWT },
+  { preHandler: authenticateJWT, schema: addTransactionSchema },
   async (request, reply) => {
     await addNewTransaction(request, reply);
   }
