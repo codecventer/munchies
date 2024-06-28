@@ -13,8 +13,8 @@ export async function addNewTransaction(
 
   if (existingProduct == null) {
     return reply.status(400).send({
-      error: "Failed to get upsell products",
-      message: `Product with ID '${productId}' not found`,
+      error: "Failed to add transaction",
+      message: `Product with id '${productId}' not found`,
     });
   }
 
@@ -27,6 +27,44 @@ export async function addNewTransaction(
       error: "Failed to add transaction",
       message: error.message,
     });
+  }
+}
+
+export async function getTransactionById(
+  request: any,
+  reply: any
+): Promise<any> {
+  const transactionId: number = request.body.transaction_id;
+
+  try {
+    const transaction = await getTransaction(transactionId);
+
+    if (transaction == null) {
+      reply
+        .status(200)
+        .send({ message: `Transaction with id '${transactionId}' not found` });
+    }
+
+    reply.status(200).send(transaction);
+  } catch (error: any) {
+    reply.status(400).send({
+      error: "Failed to get transaction",
+      message: error.message,
+    });
+  }
+}
+
+async function getTransaction(transactionId: number): Promise<any> {
+  try {
+    const existingTransaction = await transaction.findOne({
+      where: {
+        id: transactionId,
+      },
+    });
+
+    return existingTransaction;
+  } catch (error: any) {
+    throw new Error(`Error finding transaction: ${error.message}`);
   }
 }
 

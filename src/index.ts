@@ -12,7 +12,10 @@ import {
   unlinkProductUpsellProduct,
   updateProductByField as updateProductByField,
 } from "./controllers/productController";
-import { addNewTransaction } from "./controllers/transactionController";
+import {
+  addNewTransaction,
+  getTransactionById,
+} from "./controllers/transactionController";
 import {
   addProductSchema,
   deleteProductSchema,
@@ -22,6 +25,7 @@ import {
   unlinkUpsellProductSchema,
   updateProductSchema,
   userSchema,
+  getTransactionSchema,
 } from "./utils/requestSchemaUtil";
 
 dotenv.config();
@@ -114,6 +118,14 @@ fastify.post(
   { preHandler: authenticateJWT, schema: addTransactionSchema },
   async (request, reply) => {
     await addNewTransaction(request, reply);
+  }
+);
+
+fastify.post(
+  "/transactions/get-transaction",
+  { preHandler: authenticateJWT, schema: getTransactionSchema },
+  async (request, reply) => {
+    await getTransactionById(request, reply);
   }
 );
 

@@ -94,3 +94,14 @@ export const addTransactionSchema = {
     additionalProperties: false,
   },
 };
+
+export const getTransactionSchema = {
+  body: {
+    type: "object",
+    properties: {
+      transaction_id: { type: "integer" },
+    },
+    required: ["transaction_id"],
+    additionalProperties: false,
+  },
+};
