@@ -15,7 +15,7 @@ interface TransactionResponse {
   quantity: number;
   total: string;
   createdAt: string;
-  upsell_products: any[];
+  upsellProducts: any[];
 }
 
 interface NewTransactionDetails {
@@ -78,7 +78,7 @@ export async function getTransactionById(
       quantity,
       total,
       createdAt,
-      upsell_products: upsellProducts,
+      upsellProducts: upsellProducts,
     };
 
     return reply.status(200).send(response);

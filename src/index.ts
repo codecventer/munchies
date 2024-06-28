@@ -31,6 +31,8 @@ import {
 
 dotenv.config();
 
+const PORT: number = parseInt(process.env.PORT!);
+
 const fastify = Fastify({
   logger: true,
   ajv: {
@@ -45,7 +47,6 @@ const fastify = Fastify({
     },
   },
 });
-const PORT: number = parseInt(process.env.PORT || "8080", 10);
 
 fastify.post(
   "/users/register",
