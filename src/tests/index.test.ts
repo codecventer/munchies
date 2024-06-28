@@ -171,5 +171,3 @@ describe("Fastify server", () => {
     expect(response.statusCode).toBe(200);
   });
 });
-
-// run: npx jest
