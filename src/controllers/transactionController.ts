@@ -18,13 +18,18 @@ interface TransactionResponse {
   upsell_products: any[];
 }
 
+interface NewTransactionDetails {
+  productId: number;
+  quantity: number;
+  total: number;
+}
+
 export async function addNewTransaction(
   request: any,
   reply: any
 ): Promise<any> {
-  const productId: number = request.body.product_id;
-  const quantity: number = request.body.quantity;
-  const total: number = request.body.total;
+  const { productId, quantity, total }: NewTransactionDetails =
+    request.body as NewTransactionDetails;
 
   const existingProduct = await findProductById(productId);
 
@@ -56,9 +61,10 @@ export async function getTransactionById(
   try {
     const transaction = await getTransaction(transactionId);
     if (transaction == null) {
-      reply
-        .status(200)
-        .send({ message: `Transaction with id '${transactionId}' not found` });
+      reply.status(400).send({
+        error: "Failed to get transaction",
+        message: `Transaction with id '${transactionId}' not found`,
+      });
     }
 
     const upsellProducts = await getUpsellProducts(transaction.productId);

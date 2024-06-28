@@ -12,7 +12,7 @@ export async function getAllProducts(reply: any): Promise<any> {
   try {
     const allProducts = await product.findAll();
 
-    if (allProducts == null || allProducts.length === 0) {
+    if (allProducts.length === 0) {
       reply.status(200).send({ message: "No products found" });
     }
 
@@ -33,7 +33,7 @@ export async function getAllActiveProducts(reply: any): Promise<any> {
       },
     });
 
-    if (activeProducts == null || activeProducts.length === 0) {
+    if (activeProducts.length === 0) {
       reply.status(200).send({ message: "No active products found" });
     }
 
@@ -116,7 +116,7 @@ export async function updateProductByField(
 
   if (existingProduct == null) {
     return reply.status(400).send({
-      error: "Failed to delete product",
+      error: "Failed to update product",
       message: `Could not find product with name '${name}'`,
     });
   }
@@ -262,7 +262,7 @@ export async function findProductById(productId: number): Promise<any> {
 
     return productById;
   } catch (error: any) {
-    throw new Error(`Error finding product by name: ${error.message}`);
+    throw new Error(`Error finding product by id: ${error.message}`);
   }
 }
 
