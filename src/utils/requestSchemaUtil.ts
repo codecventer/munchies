@@ -15,7 +15,7 @@ export const addProductSchema = {
     type: "object",
     properties: {
       name: { type: "string" },
-      price: { type: ["integer", "number"] },
+      price: { type: "number" },
       description: { type: "string" },
       quantity: { type: "integer" },
     },
@@ -88,7 +88,7 @@ export const addTransactionSchema = {
     properties: {
       product_id: { type: "integer" },
       quantity: { type: "integer" },
-      total: { type: ["integer", "number"] },
+      total: { type: "number" },
     },
     required: ["product_id", "quantity", "total"],
     additionalProperties: false,

@@ -8,6 +8,12 @@ export interface ProductInformation {
   quantity: number;
 }
 
+interface UpdateProductInformation {
+  name: string;
+  index: number;
+  value: string | number;
+}
+
 export async function getAllProducts(reply: any): Promise<any> {
   try {
     const allProducts = await product.findAll();
@@ -108,9 +114,8 @@ export async function updateProductByField(
   request: any,
   reply: any
 ): Promise<any> {
-  const name: string = request.body.name;
-  const index: number = request.body.index;
-  const value: string = request.body.value;
+  const { name, index, value }: UpdateProductInformation =
+    request.body as UpdateProductInformation;
 
   const existingProduct = await findProductByName(name);
 
@@ -335,7 +340,7 @@ async function deleteProduct(name: string): Promise<void> {
 async function updateProduct(
   name: string,
   index: number,
-  value: string
+  value: string | number
 ): Promise<void> {
   try {
     const field: string | null = getColumnNameByIndex(index);

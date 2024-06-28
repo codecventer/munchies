@@ -1,4 +1,5 @@
 import Fastify from "fastify";
+import ajvCompiler from "@fastify/ajv-compiler";
 import * as dotenv from "dotenv";
 import { authenticateJWT } from "./utils/jwtUtil";
 import { registerUser, loginUser } from "./controllers/userController";
@@ -30,7 +31,20 @@ import {
 
 dotenv.config();
 
-const fastify = Fastify({ logger: true });
+const fastify = Fastify({
+  logger: true,
+  ajv: {
+    customOptions: {
+      strict: false,
+      allowUnionTypes: true,
+    },
+  },
+  schemaController: {
+    compilersFactory: {
+      buildValidator: ajvCompiler(),
+    },
+  },
+});
 const PORT: number = parseInt(process.env.PORT || "8080", 10);
 
 fastify.post(
