@@ -1,5 +1,22 @@
-import { findProductById } from "./productController";
+import { findProductById, getUpsellProducts } from "./productController";
 import transaction from "../models/transaction";
+
+interface TransactionDetails {
+  id: number;
+  productId: number;
+  quantity: number;
+  total: string;
+  createdAt: string;
+}
+
+interface TransactionResponse {
+  id: number;
+  productId: number;
+  quantity: number;
+  total: string;
+  createdAt: string;
+  upsell_products: any[];
+}
 
 export async function addNewTransaction(
   request: any,
@@ -38,14 +55,27 @@ export async function getTransactionById(
 
   try {
     const transaction = await getTransaction(transactionId);
-
     if (transaction == null) {
       reply
         .status(200)
         .send({ message: `Transaction with id '${transactionId}' not found` });
     }
 
-    reply.status(200).send(transaction);
+    const upsellProducts = await getUpsellProducts(transaction.productId);
+
+    const { id, productId, quantity, total, createdAt }: TransactionDetails =
+      transaction;
+
+    const response: TransactionResponse = {
+      id,
+      productId,
+      quantity,
+      total,
+      createdAt,
+      upsell_products: upsellProducts,
+    };
+
+    return reply.status(200).send(response);
   } catch (error: any) {
     reply.status(400).send({
       error: "Failed to get transaction",
