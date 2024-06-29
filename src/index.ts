@@ -50,19 +50,15 @@ const fastify = Fastify({
 
 fastify.post(
   "/users/register",
-  { schema: userSchema }, //TODO: JWT AUTHENTICATION
+  { schema: userSchema },
   async (request, reply) => {
     await registerUser(request, reply);
   }
 );
 
-fastify.post(
-  "/users/login",
-  { schema: userSchema }, //TODO: JWT AUTHENTICATION
-  async (request, reply) => {
-    await loginUser(request, reply);
-  }
-);
+fastify.post("/users/login", { schema: userSchema }, async (request, reply) => {
+  await loginUser(request, reply);
+});
 
 fastify.get(
   "/products/all-products",

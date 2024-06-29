@@ -69,11 +69,9 @@ export async function loginUser(request: any, reply: any): Promise<any> {
       };
       const jwtToken: string = generateToken(userCredentials);
 
-      await updateUserJwtToken(emailAddress, jwtToken).then(() => {
-        reply
-          .status(200)
-          .send({ message: "User login successful", token: jwtToken });
-      });
+      reply
+        .status(200)
+        .send({ message: "User login successful", token: jwtToken });
     } else {
       reply.status(400).send({
         error: "Invalid password",
@@ -112,21 +110,5 @@ async function addUser(emailAddress: string, password: string): Promise<void> {
     return;
   } catch (error: any) {
     throw new Error(`Error adding user: ${error.message}`);
-  }
-}
-
-async function updateUserJwtToken(
-  emailAddress: string,
-  jwtToken: string
-): Promise<void> {
-  try {
-    await user.update(
-      { jwtToken: jwtToken },
-      { where: { emailAddress: emailAddress } }
-    );
-
-    return;
-  } catch (error: any) {
-    throw new Error(`Error updating jwtToken: ${error.message}`);
   }
 }

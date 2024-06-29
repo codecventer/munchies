@@ -79,7 +79,7 @@ describe("Fastify server", () => {
 
     fastify.post(
       "/users/register",
-      { schema: userSchema }, //TODO: JWT AUTHENTICATION
+      { schema: userSchema },
       async (request: any, reply: any) => {
         await registerUser(request, reply);
       }
@@ -87,7 +87,7 @@ describe("Fastify server", () => {
 
     fastify.post(
       "/users/login",
-      { schema: userSchema }, //TODO: JWT AUTHENTICATION
+      { schema: userSchema },
       async (request: any, reply: any) => {
         await loginUser(request, reply);
       }

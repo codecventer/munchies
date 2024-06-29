@@ -5,7 +5,6 @@ interface UserAttributes {
   id: number;
   emailAddress: string;
   password: string;
-  jwtToken: string | null;
   createdAt: Date;
 }
 
@@ -19,7 +18,6 @@ class user
   public id!: number;
   public emailAddress!: string;
   public password!: string;
-  public jwtToken!: string | null;
   public createdAt!: Date;
 }
 
@@ -38,10 +36,6 @@ user.init(
     password: {
       type: DataTypes.STRING(255),
       allowNull: false,
-    },
-    jwtToken: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
     },
     createdAt: {
       type: DataTypes.DATE,
