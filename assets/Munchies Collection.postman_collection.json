@@ -1,0 +1,815 @@
+{
+	"info": {
+		"_postman_id": "c7fba31d-cba3-4dbe-a721-85e3ecbd77f1",
+		"name": "Munchies Collection",
+		"description": "This collection provides endpoints to manage users, products, and transactions for the Munchies platform.\n\n1. **User Management**\n    \n    - **Register User:** `/users/register`\n        \n    - **Login User:** `/users/login`\n        \n2. **Product Management**\n    \n    - **Get All Products:** `/products/all-products`\n        \n    - **Get All Active Products:** `/products/all-active-products`\n        \n    - **Add Product:** `/products/add-product`\n        \n    - **Delete Product:** `/products/delete-product`\n        \n    - **Update Product:** `/products/update-product`\n        \n    - **Link Upsell Product:** `/products/link-upsell-product`\n        \n    - **Get Product Upsell Products:** `/products/product-upsell-products`\n        \n    - **Unlink Upsell Product:** `/products/unlink-upsell-product`\n        \n3. **Transaction Management**\n    \n    - **Add Transaction:** `/transactions/add-transaction`\n        \n    - **Get Transaction by ID:** `/transactions/get-transaction`",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "34659780"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"emailAddress\": \"another.user@gmail.com\",\n  \"password\": \"StrongPassword1!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/users/register"
+					},
+					"response": [
+						{
+							"name": "register",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"emailAddress\": \"another.user@gmail.com\",\n  \"password\": \"StrongPassword1!\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/users/register"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "42"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 29 Jun 2024 08:21:29 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User registration successful\"\n}"
+						}
+					]
+				},
+				{
+					"name": "login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"emailAddress\": \"another.user@gmail.com\",\n  \"password\": \"StrongPassword1!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/users/login"
+					},
+					"response": [
+						{
+							"name": "login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"emailAddress\": \"another.user@gmail.com\",\n  \"password\": \"StrongPassword1!\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/users/login"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "227"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 29 Jun 2024 08:21:58 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User login successful\",\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbEFkZHJlc3MiOiJhbm90aGVyLnVzZXJAZ21haWwuY29tIiwiaWF0IjoxNzE5NjQ5MzE4LCJleHAiOjE3NTExODUzMTh9.BNzWhm2A0CJaf0Y6Sqwi5BXoEkR3VA1BD6Zj0H4sQtQ\"\n}"
+						}
+					]
+				}
+			],
+			"description": "Endpoints for user login and registration.\n\n1. **Register User:** `/users/register`\n    \n2. **Login User:** `/users/login`"
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "all-products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/products/all-products"
+					},
+					"response": [
+						{
+							"name": "all-products",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}/products/all-products"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "955"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 29 Jun 2024 08:22:29 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"name\": \"Rabbit R1\",\n        \"description\": \"Pocket-sized AI assistant that seems to provide little to no assistance.\",\n        \"price\": \"559.99\",\n        \"quantity\": 999,\n        \"deleted\": true,\n        \"upsellProductId\": null,\n        \"updatedAt\": null,\n        \"createdAt\": \"2024-06-29T08:21:04.000Z\"\n    },\n    {\n        \"id\": 2,\n        \"name\": \"Samsung Galaxy AI\",\n        \"description\": \"Yet another product that uses AI.\",\n        \"price\": \"999999.50\",\n        \"quantity\": 1,\n        \"deleted\": false,\n        \"upsellProductId\": null,\n        \"updatedAt\": null,\n        \"createdAt\": \"2024-06-29T08:21:04.000Z\"\n    },\n    {\n        \"id\": 3,\n        \"name\": \"Product A\",\n        \"description\": \"A product to make this APIs testing a little easier (your welcome).\",\n        \"price\": \"79.00\",\n        \"quantity\": 23,\n        \"deleted\": false,\n        \"upsellProductId\": null,\n        \"updatedAt\": null,\n        \"createdAt\": \"2024-06-29T08:21:04.000Z\"\n    },\n    {\n        \"id\": 4,\n        \"name\": \"Product B\",\n        \"description\": \"Unicorn-powered cheese grater that doubles as a time-traveling hat for adventurous squirrels.\",\n        \"price\": \"29.00\",\n        \"quantity\": 41,\n        \"deleted\": false,\n        \"upsellProductId\": 3,\n        \"updatedAt\": null,\n        \"createdAt\": \"2024-06-29T08:21:04.000Z\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "all-active-products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/products/all-active-products"
+					},
+					"response": [
+						{
+							"name": "all-active-products",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}/products/all-active-products"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "712"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 29 Jun 2024 08:22:41 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 2,\n        \"name\": \"Samsung Galaxy AI\",\n        \"description\": \"Yet another product that uses AI.\",\n        \"price\": \"999999.50\",\n        \"quantity\": 1,\n        \"deleted\": false,\n        \"upsellProductId\": null,\n        \"updatedAt\": null,\n        \"createdAt\": \"2024-06-29T08:21:04.000Z\"\n    },\n    {\n        \"id\": 3,\n        \"name\": \"Product A\",\n        \"description\": \"A product to make this APIs testing a little easier (your welcome).\",\n        \"price\": \"79.00\",\n        \"quantity\": 23,\n        \"deleted\": false,\n        \"upsellProductId\": null,\n        \"updatedAt\": null,\n        \"createdAt\": \"2024-06-29T08:21:04.000Z\"\n    },\n    {\n        \"id\": 4,\n        \"name\": \"Product B\",\n        \"description\": \"Unicorn-powered cheese grater that doubles as a time-traveling hat for adventurous squirrels.\",\n        \"price\": \"29.00\",\n        \"quantity\": 41,\n        \"deleted\": false,\n        \"upsellProductId\": 3,\n        \"updatedAt\": null,\n        \"createdAt\": \"2024-06-29T08:21:04.000Z\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "add-product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Product AA\",\n    \"price\": 999.87,\n    \"description\": \"Some description the product.\",\n    \"quantity\": 57\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/products/add-product"
+					},
+					"response": [
+						{
+							"name": "add-product",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Product AA\",\n    \"price\": 999.87,\n    \"description\": \"Some description the product.\",\n    \"quantity\": 57\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/products/add-product"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "44"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 29 Jun 2024 08:23:26 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully added new product\"\n}"
+						}
+					]
+				},
+				{
+					"name": "delete-product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Product AA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/products/delete-product"
+					},
+					"response": [
+						{
+							"name": "delete-product",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Product AA\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/products/delete-product"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "42"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 29 Jun 2024 08:23:39 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully deleted product\"\n}"
+						}
+					]
+				},
+				{
+					"name": "update-product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Product AA\",\n    \"index\": 1,\n    \"value\": \"Updated description\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/products/update-product"
+					},
+					"response": [
+						{
+							"name": "update-product",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Product AA\",\n    \"index\": 1,\n    \"value\": \"Updated description\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/products/update-product"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "42"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 29 Jun 2024 08:23:49 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully updated product\"\n}"
+						}
+					]
+				},
+				{
+					"name": "link-upsell-product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"product_id\": 1,\n    \"upsell_product_id\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/products/link-upsell-product"
+					},
+					"response": [
+						{
+							"name": "link-upsell-product",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"product_id\": 1,\n    \"upsell_product_id\": 2\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/products/link-upsell-product"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "48"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 29 Jun 2024 08:23:57 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully linked upsell product\"\n}"
+						}
+					]
+				},
+				{
+					"name": "product-upsell-products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"product_id\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/products/product-upsell-products"
+					},
+					"response": [
+						{
+							"name": "product-upsell-products",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"product_id\": 2\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/products/product-upsell-products"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "263"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 29 Jun 2024 08:24:05 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"name\": \"Rabbit R1\",\n        \"description\": \"Pocket-sized AI assistant that seems to provide little to no assistance.\",\n        \"price\": \"559.99\",\n        \"quantity\": 999,\n        \"deleted\": true,\n        \"upsellProductId\": 2,\n        \"updatedAt\": \"2024-06-29T08:23:57.000Z\",\n        \"createdAt\": \"2024-06-29T08:21:04.000Z\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "unlink-upsell-product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"product_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/products/unlink-upsell-product"
+					},
+					"response": [
+						{
+							"name": "unlink-upsell-product",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"product_id\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/products/unlink-upsell-product"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "50"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 29 Jun 2024 08:24:16 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully unlinked upsell product\"\n}"
+						}
+					]
+				}
+			],
+			"description": "Endpoints for product management.\n\n1. **Get All Products:** `/products/all-products`\n    \n2. **Get All Active Products:** `/products/all-active-products`\n    \n3. **Add Product:** `/products/add-product`\n    \n4. **Delete Product:** `/products/delete-product`\n    \n5. **Update Product:** `/products/update-product`\n    \n6. **Link Upsell Product:** `/products/link-upsell-product`\n    \n7. **Get Product Upsell Products:** `/products/product-upsell-products`\n    \n8. **Unlink Upsell Product:** `/products/unlink-upsell-product`"
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "add-transaction",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"product_id\": 2,\n    \"quantity\": 9,\n    \"total\": 19.99\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/transactions/add-transaction"
+					},
+					"response": [
+						{
+							"name": "add-transaction",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"product_id\": 2,\n    \"quantity\": 9,\n    \"total\": 19.99\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/transactions/add-transaction"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "44"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 29 Jun 2024 08:24:27 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully added transaction\"\n}"
+						}
+					]
+				},
+				{
+					"name": "get-transaction",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"transaction_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/transactions/get-transaction"
+					},
+					"response": [
+						{
+							"name": "get-transaction",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"transaction_id\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{url}}/transactions/get-transaction"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "372"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 29 Jun 2024 08:24:33 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"productId\": 3,\n    \"quantity\": 14,\n    \"total\": \"1106.00\",\n    \"createdAt\": \"2024-06-29T08:21:04.000Z\",\n    \"upsellProducts\": [\n        {\n            \"id\": 4,\n            \"name\": \"Product B\",\n            \"description\": \"Unicorn-powered cheese grater that doubles as a time-traveling hat for adventurous squirrels.\",\n            \"price\": \"29.00\",\n            \"quantity\": 41,\n            \"deleted\": false,\n            \"upsellProductId\": 3,\n            \"updatedAt\": null,\n            \"createdAt\": \"2024-06-29T08:21:04.000Z\"\n        }\n    ]\n}"
+						}
+					]
+				}
+			],
+			"description": "Endpoints for creating and fetching transaction.\n\n1. **Add Transaction:** `/transactions/add-transaction`\n    \n2. **Get Transaction by ID:** `/transactions/get-transaction`"
+		}
+	]
+}
