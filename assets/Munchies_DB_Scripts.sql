@@ -1,5 +1,6 @@
 CREATE SCHEMA munchies;
 
+-- Create Users table
 CREATE TABLE munchies.Users (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     emailAddress VARCHAR(100) NOT NULL UNIQUE,
@@ -14,6 +15,7 @@ VALUES
 
 SELECT * FROM munchies.Users;
 
+-- Create Products table
 CREATE TABLE munchies.Products (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
@@ -35,6 +37,7 @@ VALUES
 
 SELECT * FROM munchies.Products;
 
+-- Create Transactions table
 CREATE TABLE munchies.Transactions (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     productId INT NOT NULL,

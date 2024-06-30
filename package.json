@@ -1,7 +1,7 @@
 {
   "name": "munchies",
   "version": "1.0.0",
-  "description": "Fastify application that contains basic POS (Point-of-sales) operations including user registration and login.",
+  "description": "Fastify POS (Point-of-sale) app providing transaction, product and user management.",
   "main": "index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",

@@ -48,6 +48,7 @@ const fastify = Fastify({
   },
 });
 
+// User endpoints
 fastify.post(
   "/users/register",
   { schema: userSchema },
@@ -60,6 +61,7 @@ fastify.post("/users/login", { schema: userSchema }, async (request, reply) => {
   await loginUser(request, reply);
 });
 
+// Product endpoints
 fastify.get(
   "/products/all-products",
   { preHandler: authenticateJWT },
@@ -124,6 +126,7 @@ fastify.post(
   }
 );
 
+// Transaction endpoints
 fastify.post(
   "/transactions/add-transaction",
   { preHandler: authenticateJWT, schema: addTransactionSchema },
