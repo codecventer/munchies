@@ -78,7 +78,6 @@ A valid JWT token is required for any product or transaction related requests. T
 | `password` | `string` |
 
 - From the response, copy the value of the token and paste it in the (Postman) Development environment's 'token' variable
-- Also, paste the token value in the (Visual Studio) .env file's 'JWT_SECRET' variable and restart the application
 - Now you should have authenticated access for product and transaction related requests.
 
 ### Make Requests
