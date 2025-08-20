@@ -3,9 +3,5 @@ export function validateStringNotNullOrBlank(value: any): boolean {
     return false;
   }
 
-  if (!value || value.trim().length === 0) {
-    return false;
-  }
-
-  return true;
+  return !(!value || value.trim().length === 0);
 }

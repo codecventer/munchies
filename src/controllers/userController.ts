@@ -1,7 +1,7 @@
 import user from "../models/user";
 import { generateToken } from "../utils/jwtUtil";
-import { encryptPassword, isCorrectPassword } from "../utils/passwordUtil";
 import { validatePasswordStrength } from "../utils/regexUtil";
+import { encryptPassword, isCorrectPassword } from "../utils/passwordUtil";
 
 export interface UserCredentials {
   emailAddress: string;
@@ -87,12 +87,11 @@ export async function loginUser(request: any, reply: any): Promise<any> {
 
 async function findUserByEmail(emailAddress: string): Promise<user | null> {
   try {
-    const existingUser = await user.findOne({
+    return await user.findOne({
       where: {
         emailAddress: emailAddress,
       },
     });
-    return existingUser;
   } catch (error: any) {
     throw new Error(`Error finding user by email: ${error.message}`);
   }

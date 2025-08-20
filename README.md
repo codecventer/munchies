@@ -1,13 +1,17 @@
-# Munchies
+# Munchies - Point-of-Sale API Starter
 
-Fastify POS (Point-of-sale) app that provides transaction, product and user management by making use of Sequelize (ORM) and MySQL (database).
+A production-ready Point-of-Sale API starter built with Fastify, Sequelize ORM, and MySQL. Perfect for developers looking to quickly bootstrap a retail or restaurant POS system with essential commerce features.
 
-Munchies provides the following key features:
+## Key Features
 
-- Users are able to register and login using an email address and password
-- CRUD operations of Products
-- Link and unlink a product to another as an upsell product
-- Create and fetch transactions
+- **User Authentication** - JWT-based registration and login system
+- **Product Management** - Full CRUD operations for inventory management
+- **Upselling System** - Link products as upsell recommendations
+- **Transaction Processing** - Create and track sales transactions
+- **RESTful API** - Clean, documented endpoints ready for frontend integration
+- **Database Ready** - Pre-configured MySQL schema and migrations
+
+Ideal for building retail systems, restaurant ordering platforms, or any commerce application requiring transaction management.
 
 Please note, this README does not include the installation and setup of a local MySQL server.
 

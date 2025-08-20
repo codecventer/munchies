@@ -92,13 +92,11 @@ export async function getTransactionById(
 
 async function getTransaction(transactionId: number): Promise<any> {
   try {
-    const existingTransaction = await transaction.findOne({
+    return await transaction.findOne({
       where: {
         id: transactionId,
       },
     });
-
-    return existingTransaction;
   } catch (error: any) {
     throw new Error(`Error finding transaction: ${error.message}`);
   }

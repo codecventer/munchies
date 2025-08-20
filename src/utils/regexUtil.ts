@@ -1,8 +1,3 @@
-export function isValidEmail(emailAddress: string): boolean {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return regex.test(emailAddress);
-}
-
 export function validatePasswordStrength(password: string): {
   isStrong: boolean;
   message: string;

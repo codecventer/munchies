@@ -1,6 +1,5 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
-import Product from "./product";
 
 interface TransactionAttributes {
   id: number;
@@ -57,13 +56,6 @@ class transaction
         underscored: false,
       }
     );
-  }
-
-  public static associate() {
-    transaction.belongsTo(Product, {
-      foreignKey: "productId",
-      as: "product",
-    });
   }
 }
 

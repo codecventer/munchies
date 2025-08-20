@@ -1,33 +1,33 @@
 import Fastify from "fastify";
 import ajvCompiler from "@fastify/ajv-compiler";
-import * as dotenv from "dotenv";
 import { authenticateJWT } from "./utils/jwtUtil";
 import { registerUser, loginUser } from "./controllers/userController";
 import {
   addNewProduct,
+  getAllProducts,
   deleteProductByName,
   getAllActiveProducts,
-  getAllProducts,
-  getProductUpsellProducts,
+  updateProductByField,
   linkUpsellProductByIds,
+  getProductUpsellProducts,
   unlinkProductUpsellProduct,
-  updateProductByField as updateProductByField,
 } from "./controllers/productController";
 import {
   addNewTransaction,
   getTransactionById,
 } from "./controllers/transactionController";
 import {
+  userSchema,
   addProductSchema,
   deleteProductSchema,
-  linkUpsellProductSchema,
-  productUpsellProductsSchema,
-  addTransactionSchema,
-  unlinkUpsellProductSchema,
   updateProductSchema,
-  userSchema,
+  addTransactionSchema,
   getTransactionSchema,
+  linkUpsellProductSchema,
+  unlinkUpsellProductSchema,
+  productUpsellProductsSchema,
 } from "./utils/requestSchemaUtil";
+import * as dotenv from "dotenv";
 
 dotenv.config();
 

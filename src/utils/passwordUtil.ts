@@ -7,9 +7,7 @@ export async function encryptPassword(
 
   try {
     const salt = await bcrypt.genSalt(saltRounds);
-    const hash = await bcrypt.hash(plaintextPassword, salt);
-
-    return hash;
+    return await bcrypt.hash(plaintextPassword, salt);
   } catch (error) {
     throw error;
   }
@@ -20,11 +18,7 @@ export async function isCorrectPassword(
   hashedPassword: string
 ): Promise<boolean> {
   try {
-    const isMatch: boolean = await bcrypt.compare(
-      plaintextPassword,
-      hashedPassword
-    );
-    return isMatch;
+    return await bcrypt.compare(plaintextPassword, hashedPassword);
   } catch (error) {
     throw error;
   }
